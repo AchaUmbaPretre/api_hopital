@@ -1,14 +1,18 @@
 const pool = require('../config/db.config');
+const bcrypt = require('bcryptjs');
 
-const getAllUsers = (callback) => {
-  pool.query('SELECT * FROM users', (err, results) => {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, results);
-  });
+const getUserByUsername = async (username) => {
+  const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+  return rows[0];
+};
+
+const createUser = async (username, password, email, postnom, prenom, phone_number, role, department_id, img) => {
+   const hashedPassword = await bcrypt.hash(password, 10);
+  const [result] = await pool.query('INSERT INTO users (username, password, email, postnom, prenom, phone_number, role, department_id, img) VALUES (?, ?, ?, ?, ?, ?, ?)', [username,username, hashedPassword, email, postnom, prenom, phone_number, role, department_id, img ]);
+  return result;
 };
 
 module.exports = {
-  getAllUsers,
+  getUserByUsername,
+  createUser,
 };
