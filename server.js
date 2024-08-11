@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const { PORT } = require('./config/server.config');
 const authRoutes = require('./routes/auth.routes');
+const patientRoutes = require('./routes/patient.routes');
 const errorHandler = require('./middleware/error.middleware');
 
 app.use(cors());
@@ -10,6 +11,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/patient', patientRoutes);
 
 app.use(errorHandler);
 
