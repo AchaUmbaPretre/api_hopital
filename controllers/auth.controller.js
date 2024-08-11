@@ -5,25 +5,41 @@ const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/auth.config');
 
 const login = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
-    const user = await userModel.getUserByUsername(username);
+    const { email, password } = req.body;
+
+    const user = await userModel.getUserByUsername(email);
 
     if (!user) {
-      return res.status(401).json({ error: 'Utilisateur non trouvé' });
+      return res.status(401).json({ success: false, message: 'Utilisateur non trouvé' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ error: 'Mot de passe incorrect' });
+      return res.status(401).json({ success: false, message: 'Mot de passe incorrect' });
     }
 
-    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-    res.json({ token });
+    // Generate JWT token
+    const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+    const { id, username, role } = user;
+
+    res.json({
+      success: true,
+      message: 'Connexion réussie',
+      user: {
+        id,
+        username,
+        role,
+        token
+      }
+    });
   } catch (err) {
+    // Pass error to error handling middleware
     next(err);
   }
 };
+
 
 const register = async (req, res, next) => {
   try {

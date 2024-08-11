@@ -1,16 +1,43 @@
 const pool = require('../config/db.config');
 const bcrypt = require('bcryptjs');
 
-const getUserByUsername = async (username) => {
-  const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
-  return rows[0];
+const getUserByUsername = async (email) => {
+  const queryAsync = (query, params) => {
+    return new Promise((resolve, reject) => {
+      pool.query(query, params, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  };
+
+  try {
+    const results = await queryAsync('SELECT * FROM users WHERE email = ?', [email]);
+    return results[0]; // Assurez-vous que 'results' est un tableau de lignes
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l\'utilisateur :', error);
+    throw error; // Propager l'erreur si nécessaire
+  }
 };
 
 const createUser = async (username, password, email, postnom, prenom, phone_number, role, department_id, img) => {
-   const hashedPassword = await bcrypt.hash(password, 10);
-  const [result] = await pool.query('INSERT INTO users (username, password, email, postnom, prenom, phone_number, role, department_id, img) VALUES (?, ?, ?, ?, ?, ?, ?)', [username,username, hashedPassword, email, postnom, prenom, phone_number, role, department_id, img ]);
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  if(!role){
+    console.log('Role est indefi')
+  }
+
+  const result = await pool.query(
+    'INSERT INTO users (username, password, email, postnom, prenom, phone_number, role, department_id, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [username, hashedPassword, email, postnom, prenom, phone_number, role, department_id, img]
+  );
+
   return result;
 };
+
 
 module.exports = {
   getUserByUsername,
