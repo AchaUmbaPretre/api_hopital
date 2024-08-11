@@ -16,10 +16,10 @@ const getUserByUsername = async (email) => {
 
   try {
     const results = await queryAsync('SELECT * FROM users WHERE email = ?', [email]);
-    return results[0]; // Assurez-vous que 'results' est un tableau de lignes
+    return results[0]; 
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'utilisateur :', error);
-    throw error; // Propager l'erreur si nécessaire
+    throw error; 
   }
 };
 
