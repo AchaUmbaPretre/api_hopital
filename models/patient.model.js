@@ -15,20 +15,19 @@ const getPatient = async () => {
   
     try {
       const results = await queryAsync('SELECT * FROM patient');
-      return results[0]; 
+      return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des patients :', error);
       throw error; 
     }
   };
   
-  const createPatient = async (nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img) => {
-  
+  const createPatient = async (nom_patient, prenom, dateNaissance, lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img) => {
     const result = await pool.query(
-      'INSERT INTO users (nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img]
+      'INSERT INTO patient (nom_patient, prenom, dateNaissance, lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [nom_patient, prenom, dateNaissance, lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img]
     );
-  
+    
     return result;
   };
   

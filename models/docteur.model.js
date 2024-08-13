@@ -14,20 +14,20 @@ const getDocteur = async () => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM patient');
-      return results[0]; 
+      const results = await queryAsync('SELECT * FROM users WHERE role = docteur');
+      return results; 
     } catch (error) {
-      console.error('Erreur lors de la récupération des patients :', error);
+      console.error('Erreur lors de la récupération des docteurs :', error);
       throw error; 
     }
   };
   
-  const createDocteur = async (nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img) => {
+  const createDocteur = async (username, hashedPassword, email, postnom, prenom, phone_number, role, department_id, img) => {
   
     const result = await pool.query(
-      'INSERT INTO users (nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img]
-    );
+        'INSERT INTO users (username, password, email, postnom, prenom, phone_number, role, department_id, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [username, hashedPassword, email, postnom, prenom, phone_number, role, department_id, img]
+      );
   
     return result;
   };

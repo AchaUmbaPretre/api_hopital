@@ -1,11 +1,10 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const patientModel = require('../models/patient.model');
+const docteurModel = require('../models/docteur.model');
+const { postControllerPatient } = require('./patient.controller');
 
 const getControllerDocteur = async (req, res, next) => {
   try {
 
-    const data = await patientModel.getPatient();
+    const data = await docteurModel.getDocteur();
 
     if (!data) {
       return res.status(401).json({ success: false, message: 'Utilisateur non trouvé' });
@@ -20,16 +19,16 @@ const getControllerDocteur = async (req, res, next) => {
 
 const postControllerDocteur = async (req, res, next) => {
   try {
-    const { nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img } = req.body;
+    const { username, hashedPassword, email, postnom, prenom, phone_number, role, department_id, img } = req.body;
 
-    await patientModel.createPatient(nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img);
-    res.status(201).json({ message: 'Patient créé avec succès' });
+    await docteurModel.createDocteur(username, hashedPassword, email, postnom, prenom, phone_number, role, department_id, img);
+    res.status(201).json({ message: 'Docteur créé avec succès' });
   } catch (err) {
     next(err);
   }
 };
 
 module.exports = {
-  getControllerPatient,
-  postControllerPatient
+  getControllerDocteur,
+  postControllerDocteur
 };
