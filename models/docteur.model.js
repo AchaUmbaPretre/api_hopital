@@ -14,7 +14,7 @@ const getDocteur = async () => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM users WHERE role = docteur');
+      const results = await queryAsync('SELECT * FROM users WHERE role = 1');
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des docteurs :', error);
@@ -22,11 +22,11 @@ const getDocteur = async () => {
     }
   };
   
-  const createDocteur = async (username, hashedPassword, email, postnom, prenom, phone_number, role, department_id, img) => {
+  const createDocteur = async (username, password, email, postnom, prenom, phone_number, role, department_id,specialite,adresse, img) => {
   
     const result = await pool.query(
-        'INSERT INTO users (username, password, email, postnom, prenom, phone_number, role, department_id, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [username, hashedPassword, email, postnom, prenom, phone_number, role, department_id, img]
+        'INSERT INTO users (username, password, email, postnom, prenom, phone_number, role, department_id,specialite,adresse, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)',
+        [username, password, email, postnom, prenom, phone_number, role, department_id,specialite,adresse, img]
       );
   
     return result;

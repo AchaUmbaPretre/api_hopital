@@ -19,6 +19,7 @@ const getControllerPatient = async (req, res, next) => {
 
 
 const postControllerPatient = async (req, res, next) => {
+  consoole.log(req.body)
   try {
     const { nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img } = req.body;
 
