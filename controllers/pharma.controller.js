@@ -28,6 +28,6 @@ const postControllerPharma = async (req, res, next) => {
 };
 
 module.exports = {
-  getControllerDocteur,
-  postControllerDocteur
+  getControllerPharma ,
+  postControllerPharma
 };

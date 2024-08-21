@@ -5,7 +5,9 @@ const { PORT } = require('./config/server.config');
 const authRoutes = require('./routes/auth.routes');
 const patientRoutes = require('./routes/patient.routes');
 const docteurRoutes = require('./routes/docteur.routes');
-const consultantRoutes = require('./routes/docteur.routes');
+const consultantRoutes = require('./routes/consult.routes');
+const serviceRoutes = require('./routes/service.routes');
+
 const errorHandler = require('./middleware/error.middleware');
 
 app.use(cors());
@@ -16,6 +18,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/patient', patientRoutes);
 app.use('/api/docteur', docteurRoutes);
 app.use('/api/consultant', consultantRoutes);
+app.use('/api/service', serviceRoutes);
+
 app.use(errorHandler);
 
 app.listen(PORT, () => {
