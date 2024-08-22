@@ -1,6 +1,6 @@
 const pool = require('../config/db.config');
 
-const getPharma = async () => {
+const getRdv = async () => {
     const queryAsync = (query, params) => {
       return new Promise((resolve, reject) => {
         pool.query(query, params, (error, results) => {
@@ -14,7 +14,7 @@ const getPharma = async () => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM medicament');
+      const results = await queryAsync('SELECT * FROM rdv');
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des consultation :', error);
@@ -23,7 +23,7 @@ const getPharma = async () => {
   };
 
 
-const getPharmaOne = async (id) => {
+const getRdvOne = async (id) => {
     const queryAsync = (query, params) => {
       return new Promise((resolve, reject) => {
         pool.query(query, params, (error, results) => {
@@ -37,7 +37,7 @@ const getPharmaOne = async (id) => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM medicament WHERE id = ?', [id]);
+      const results = await queryAsync('SELECT * FROM rdv WHERE id = ?', [id]);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des consultation :', error);
@@ -45,11 +45,11 @@ const getPharmaOne = async (id) => {
     }
   };
   
-  const createPharma = async (nomMedicament , description, stock) => {
+  const createRdv = async (id_patient  , id_utilisateur, date_rdv, motif_rdv, statut) => {
   
     const result = await pool.query(
-        'INSERT INTO medicament (nomMedicament , description, stock) VALUES (?, ?, ?)',
-        [nomMedicament , description, stock]
+        'INSERT INTO rdv (id_patient , id_utilisateur, date_rdv, motif_rdv, statut) VALUES (?, ?, ?, ?, ?)',
+        [id_patient  , id_utilisateur, date_rdv, motif_rdv, statut]
       );
   
     return result;
@@ -57,7 +57,7 @@ const getPharmaOne = async (id) => {
   
   
   module.exports = {
-    getPharma,
-    getPharmaOne,
-    createPharma,
+    getRdv,
+    getRdvOne,
+    createRdv,
   };

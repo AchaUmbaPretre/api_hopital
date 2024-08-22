@@ -16,6 +16,49 @@ const getControllerDocteur = async (req, res, next) => {
   }
 };
 
+const getControllerProvince = async (req, res, next) => {
+  try {
+    const data = await docteurModel.getProvince();
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ success: false, message: 'Aucun utilisateur trouvé' });
+    }
+
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getControllerSpecialite = async (req, res, next) => {
+  try {
+    const data = await docteurModel.getSpecialite();
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ success: false, message: 'Aucun utilisateur trouvé' });
+    }
+
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+const getControllerDepartement = async (req, res, next) => {
+  try {
+    const data = await docteurModel.getDepartement();
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ success: false, message: 'Aucun departement trouvé' });
+    }
+
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const postControllerDocteur = async (req, res, next) => {
 
   try {
@@ -37,5 +80,8 @@ const postControllerDocteur = async (req, res, next) => {
 
 module.exports = {
   getControllerDocteur,
-  postControllerDocteur
+  getControllerSpecialite,
+  postControllerDocteur,
+  getControllerDepartement,
+  getControllerProvince
 };

@@ -1,6 +1,6 @@
 const pool = require('../config/db.config');
 
-const getPharma = async () => {
+const getTraitement = async () => {
     const queryAsync = (query, params) => {
       return new Promise((resolve, reject) => {
         pool.query(query, params, (error, results) => {
@@ -14,16 +14,16 @@ const getPharma = async () => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM medicament');
+      const results = await queryAsync('SELECT * FROM traitement');
       return results; 
     } catch (error) {
-      console.error('Erreur lors de la récupération des consultation :', error);
+      console.error('Erreur lors de la récupération des traitements :', error);
       throw error; 
     }
   };
 
 
-const getPharmaOne = async (id) => {
+const gettraitementOne = async (id) => {
     const queryAsync = (query, params) => {
       return new Promise((resolve, reject) => {
         pool.query(query, params, (error, results) => {
@@ -37,19 +37,19 @@ const getPharmaOne = async (id) => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM medicament WHERE id = ?', [id]);
+      const results = await queryAsync('SELECT * FROM traitement WHERE id = ?', [id]);
       return results; 
     } catch (error) {
-      console.error('Erreur lors de la récupération des consultation :', error);
+      console.error('Erreur lors de la récupération des traitements :', error);
       throw error; 
     }
   };
   
-  const createPharma = async (nomMedicament , description, stock) => {
+  const createTraitement = async (consultationId, medicament, dose, frequence, duree, instructions) => {
   
     const result = await pool.query(
-        'INSERT INTO medicament (nomMedicament , description, stock) VALUES (?, ?, ?)',
-        [nomMedicament , description, stock]
+        'INSERT INTO rdv (consultationId, medicament, dose, frequence, duree, instructions) VALUES (?, ?, ?, ?, ?, ?)',
+        [consultationId, medicament, dose, frequence, duree, instructions]
       );
   
     return result;
@@ -57,7 +57,7 @@ const getPharmaOne = async (id) => {
   
   
   module.exports = {
-    getPharma,
-    getPharmaOne,
-    createPharma,
+    getTraitement,
+    gettraitementOne,
+    createTraitement,
   };

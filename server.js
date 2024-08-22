@@ -7,6 +7,13 @@ const patientRoutes = require('./routes/patient.routes');
 const docteurRoutes = require('./routes/docteur.routes');
 const consultantRoutes = require('./routes/consult.routes');
 const serviceRoutes = require('./routes/service.routes');
+const pharmaRoutes = require('./routes/pharma.routes');
+const rdvRoutes = require('./routes/rdv.routes');
+const admissionRoutes = require('./routes/rdv.routes');
+const factureRoutes = require('./routes/factures.routes');
+const traitementRoutes = require('./routes/traitement.routes');
+const userRoutes = require('./routes/user.routes');
+
 
 const errorHandler = require('./middleware/error.middleware');
 
@@ -19,6 +26,12 @@ app.use('/api/patient', patientRoutes);
 app.use('/api/docteur', docteurRoutes);
 app.use('/api/consultant', consultantRoutes);
 app.use('/api/service', serviceRoutes);
+app.use('/api/pharma', pharmaRoutes);
+app.use('/api/rendezVous', rdvRoutes);
+app.use('/api/admission', admissionRoutes);
+app.use('/api/factures', factureRoutes);
+app.use('/api/traitement', traitementRoutes);
+app.use('/api/user', userRoutes);
 
 app.use(errorHandler);
 
