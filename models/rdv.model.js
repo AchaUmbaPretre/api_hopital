@@ -45,11 +45,11 @@ const getRdvOne = async (id) => {
     }
   };
   
-  const createRdv = async (id_patient  , id_utilisateur, date_rdv, motif_rdv, statut) => {
+  const createRdv = async (id_patient, id_utilisateur, date_rdv, heure_debut, heure_fin, type_rendezvous, motif_rdv, statut) => {
   
     const result = await pool.query(
-        'INSERT INTO rdv (id_patient , id_utilisateur, date_rdv, motif_rdv, statut) VALUES (?, ?, ?, ?, ?)',
-        [id_patient  , id_utilisateur, date_rdv, motif_rdv, statut]
+        'INSERT INTO rdv (id_patient, id_utilisateur, date_rdv, heure_debut, heure_fin, type_rendezvous, motif_rdv, statut) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [id_patient  , id_utilisateur, date_rdv, heure_debut, heure_fin, type_rendezvous, motif_rdv, statut]
       );
   
     return result;

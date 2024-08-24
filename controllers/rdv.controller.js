@@ -37,10 +37,10 @@ const getControllerRdvOne = async (req, res, next) => {
 const postControllerRdv = async (req, res, next) => {
 
   try {
-    const {id_patient, id_utilisateur, date_rdv, motif_rdv, statut} = req.body;
+    const {id_patient, id_utilisateur, date_rdv, heure_debut, heure_fin, type_rendezvous, motif_rdv, statut} = req.body;
 
-    await rdvModel.createRdv(id_patient, id_utilisateur, date_rdv, motif_rdv, statut);
-    res.status(201).json({ message: 'Docteur créé avec succès' });
+    await rdvModel.createRdv(id_patient, id_utilisateur, date_rdv, heure_debut, heure_fin, type_rendezvous, motif_rdv, statut);
+    res.status(201).json({ message: 'Rendez vous créé avec succès' });
   } catch (err) {
     next(err);
   }
