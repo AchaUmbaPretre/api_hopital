@@ -3,6 +3,7 @@ const router = express.Router();
 const consultaController = require('./../controllers/consult.controller')
 
 router.get('/', consultaController.getControllerConsult);
+router.get('/one', consultaController.getControllerConsultOne);
 router.get('/consult_type', consultaController.getControllerConsultType);
 router.post('/', consultaController.postControllerConsult);
 

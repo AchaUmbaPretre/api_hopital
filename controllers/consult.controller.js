@@ -15,6 +15,21 @@ const getControllerConsult = async (req, res, next) => {
   }
 };
 
+const getControllerConsultOne = async (req, res, next) => {
+  const {id_consultation} = req.query;
+  try {
+
+    const data = await consultModel.getConsultOne(id_consultation);
+
+    if (!data) {
+      return res.status(401).json({ success: false, message: 'Utilisateur non trouvé' });
+    }
+
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
 
 const getControllerConsultType = async (req, res) => {
   try {
@@ -45,6 +60,7 @@ const postControllerConsult = async (req, res, next) => {
 
 module.exports = {
   getControllerConsult,
+  getControllerConsultOne,
   postControllerConsult,
   getControllerConsultType
 };
