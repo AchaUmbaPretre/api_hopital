@@ -14,7 +14,10 @@ const getTraitement = async () => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM traitement');
+      const results = await queryAsync(`SELECT traitement.medicament, traitement.dose, traitement.frequence, traitement.duree, traitement.instructions, typeconsultation.nomConsultation, patient.nom_patient AS patient FROM traitement
+INNER JOIN consultation ON traitement.consultationId = consultation.id
+INNER JOIN typeconsultation ON consultation.id_typeConsultation = typeconsultation.id_typeConsultation
+INNER JOIN patient ON consultation.patientId = patient.id_patient`);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des traitements :', error);
@@ -37,7 +40,10 @@ const gettraitementOne = async (id) => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM traitement WHERE id = ?', [id]);
+      const results = await queryAsync(`SELECT traitement.medicament, traitement.dose, traitement.frequence, traitement.duree, traitement.instructions, typeconsultation.nomConsultation, patient.nom_patient AS patient FROM traitement
+INNER JOIN consultation ON traitement.consultationId = consultation.id
+INNER JOIN typeconsultation ON consultation.id_typeConsultation = typeconsultation.id_typeConsultation
+INNER JOIN patient ON consultation.patientId = patient.id_patient WHERE traitement.id = ?`, [id]);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des traitements :', error);
@@ -48,7 +54,7 @@ const gettraitementOne = async (id) => {
   const createTraitement = async (consultationId, medicament, dose, frequence, duree, instructions) => {
   
     const result = await pool.query(
-        'INSERT INTO rdv (consultationId, medicament, dose, frequence, duree, instructions) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO traitement (consultationId, medicament, dose, frequence, duree, instructions) VALUES (?, ?, ?, ?, ?, ?)',
         [consultationId, medicament, dose, frequence, duree, instructions]
       );
   

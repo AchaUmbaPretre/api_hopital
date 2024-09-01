@@ -20,7 +20,7 @@ const getControllerTraitementOne = async (req, res, next) => {
     const {id} = req.query;
     try {
   
-      const data = await traitementModel.gettraitementOne(IDBKeyRange);
+      const data = await traitementModel.gettraitementOne(id);
   
       if (!data) {
         return res.status(401).json({ success: false, message: 'Service non trouvé' });
@@ -39,7 +39,7 @@ const postControllerTraitement = async (req, res, next) => {
   try {
     const {consultationId, medicament, dose, frequence, duree, instructions} = req.body;
 
-    await rdvModel.createRdv(consultationId, medicament, dose, frequence, duree, instructions);
+    await traitementModel.createTraitement(consultationId, medicament, dose, frequence, duree, instructions);
     res.status(201).json({ message: 'Traitement créé avec succès' });
   } catch (err) {
     next(err);
