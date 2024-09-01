@@ -17,6 +17,20 @@ const getControllerPatient = async (req, res, next) => {
   }
 };
 
+const getControllerTypePatient = async (req, res, next) => {
+  try {
+
+    const data = await patientModel.getTypePatient();
+
+    if (!data) {
+      return res.status(401).json({ success: false, message: 'Utilisateur non trouvé' });
+    }
+
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
 
 const getControllerPatientOne = async (req, res) => {
   const {id_patient} = req.query;
@@ -50,6 +64,7 @@ const postControllerPatient = async (req, res, next) => {
 
 module.exports = {
   getControllerPatient,
+  getControllerTypePatient,
   postControllerPatient,
   getControllerPatientOne 
 };

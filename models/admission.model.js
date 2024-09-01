@@ -14,7 +14,9 @@ const getAdmission = async () => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM admission');
+      const results = await queryAsync(`SELECT admission.id, admission.dateAdmission, admission.dateSortie, admission.raisonAdmission, patient.nom_patient, service.nomService FROM admission
+                                          INNER JOIN service ON admission.serviceId = service.id
+                                          INNER JOIN patient ON admission.patientId = patient.id_patient`);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des consultation :', error);

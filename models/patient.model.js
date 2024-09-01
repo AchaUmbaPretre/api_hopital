@@ -21,6 +21,28 @@ const getPatient = async () => {
       throw error; 
     }
   };
+
+const getTypePatient = async () => {
+    const queryAsync = (query, params) => {
+      return new Promise((resolve, reject) => {
+        pool.query(query, params, (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        });
+      });
+    };
+  
+    try {
+      const results = await queryAsync('SELECT * FROM typepatient');
+      return results; 
+    } catch (error) {
+      console.error('Erreur lors de la récupération des type patients :', error);
+      throw error; 
+    }
+  };
   
 const getPatientOne = async (id_patient) => {
     const queryAsync = (query, params) => {
@@ -56,6 +78,7 @@ const getPatientOne = async (id_patient) => {
   
   module.exports = {
     getPatient,
+    getTypePatient,
     createPatient,
     getPatientOne
   };
