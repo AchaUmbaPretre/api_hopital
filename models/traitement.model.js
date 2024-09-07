@@ -14,10 +14,11 @@ const getTraitement = async () => {
     };
   
     try {
-      const results = await queryAsync(`SELECT traitement.medicament, traitement.dose, traitement.frequence, traitement.duree, traitement.instructions, typeconsultation.nomConsultation, patient.nom_patient AS patient FROM traitement
+      const results = await queryAsync(`SELECT medicament.nomMedicament, traitement.dose, traitement.frequence, traitement.duree, traitement.instructions, typeconsultation.nomConsultation, patient.nom_patient AS patient FROM traitement
 INNER JOIN consultation ON traitement.consultationId = consultation.id
 INNER JOIN typeconsultation ON consultation.id_typeConsultation = typeconsultation.id_typeConsultation
-INNER JOIN patient ON consultation.patientId = patient.id_patient`);
+INNER JOIN patient ON consultation.patientId = patient.id_patient
+INNER JOIN medicament ON traitement.medicament = medicament.id`);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des traitements :', error);

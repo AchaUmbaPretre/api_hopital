@@ -1,5 +1,27 @@
 const pool = require('../config/db.config');
 
+const getConsulCount = async () => {
+  const queryAsync = (query, params) => {
+    return new Promise((resolve, reject) => {
+      pool.query(query, params, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  };
+
+  try {
+    const results = await queryAsync('SELECT COUNT(id) AS nbre_consultation FROM consultation');
+    return results; 
+  } catch (error) {
+    console.error('Erreur lors de la récupération des consultation :', error);
+    throw error; 
+  }
+};
+
 const getConsult = async () => {
     const queryAsync = (query, params) => {
       return new Promise((resolve, reject) => {
@@ -89,6 +111,7 @@ const getConsultType = async () => {
   
   
   module.exports = {
+    getConsulCount,
     getConsult,
     getConsultOne,
     createConsult,

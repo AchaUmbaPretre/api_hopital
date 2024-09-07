@@ -2,6 +2,35 @@ const bcrypt = require('bcryptjs');
 const docteurModel = require('../models/docteur.model');
 const saltRounds = 10; // Le nombre de tours pour le hachage
 
+const getControllerDocteurCount = async (req, res, next) => {
+  try {
+    const data = await docteurModel.getDocteurCount();
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ success: false, message: 'Aucun utilisateur trouvé' });
+    }
+
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getControllerDocteurOne = async (req, res, next) => {
+  const {id_docteur} = req.query;
+  try {
+    const data = await docteurModel.getDocteurOne(id_docteur);
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ success: false, message: 'Aucun utilisateur trouvé' });
+    }
+
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getControllerDocteur = async (req, res, next) => {
   try {
     const data = await docteurModel.getDocteur();
@@ -60,6 +89,7 @@ const getControllerDepartement = async (req, res, next) => {
 };
 
 const postControllerDocteur = async (req, res, next) => {
+  console.log(req.body)
 
   try {
     const { username, password, email, postnom, prenom, phone_number, role, department_id, specialite, adresse, img } = req.body;
@@ -79,6 +109,8 @@ const postControllerDocteur = async (req, res, next) => {
 };
 
 module.exports = {
+  getControllerDocteurOne,
+getControllerDocteurCount,
   getControllerDocteur,
   getControllerSpecialite,
   postControllerDocteur,

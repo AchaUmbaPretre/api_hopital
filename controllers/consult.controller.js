@@ -1,5 +1,19 @@
 const consultModel = require('../models/consult.model');
 
+const getControllerConsultCount = async (req, res, next) => {
+  try {
+    const data = await consultModel.getConsulCount();
+
+    if (!data) {
+      return res.status(404).json({ success: false, message: 'Aucun utilisateur trouvé' });
+    }
+
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getControllerConsult = async (req, res, next) => {
   try {
 
@@ -59,6 +73,7 @@ const postControllerConsult = async (req, res, next) => {
 };
 
 module.exports = {
+  getControllerConsultCount,
   getControllerConsult,
   getControllerConsultOne,
   postControllerConsult,

@@ -2,6 +2,21 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const patientModel = require('../models/patient.model');
 
+const getControllerPatientCount = async (req, res, next) => {
+  try {
+
+    const data = await patientModel.getPatientCount();
+
+    if (!data) {
+      return res.status(401).json({ success: false, message: 'Utilisateur non trouvé' });
+    }
+
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getControllerPatient = async (req, res, next) => {
   try {
 
@@ -63,6 +78,7 @@ const postControllerPatient = async (req, res, next) => {
 };
 
 module.exports = {
+  getControllerPatientCount,
   getControllerPatient,
   getControllerTypePatient,
   postControllerPatient,

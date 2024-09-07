@@ -1,5 +1,27 @@
 const pool = require('../config/db.config');
 
+const getPatientCount = async () => {
+  const queryAsync = (query, params) => {
+    return new Promise((resolve, reject) => {
+      pool.query(query, params, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  };
+
+  try {
+    const results = await queryAsync('SELECT COUNT(id_patient) AS nbre_patient FROM patient');
+    return results; 
+  } catch (error) {
+    console.error('Erreur lors de la récupération des patients :', error);
+    throw error; 
+  }
+};
+
 const getPatient = async () => {
     const queryAsync = (query, params) => {
       return new Promise((resolve, reject) => {
@@ -77,6 +99,7 @@ const getPatientOne = async (id_patient) => {
   
   
   module.exports = {
+    getPatientCount,
     getPatient,
     getTypePatient,
     createPatient,
