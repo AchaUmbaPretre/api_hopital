@@ -37,7 +37,22 @@ const getFacturesOne = async (id) => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM factures WHERE id_facture = ?', [id]);
+      const results = await queryAsync(`SELECT 
+  facture_details.montant, facture_details.service_type, factures.date_emission, factures.date_limite, factures.montant_total, factures.status, factures.id_facture, factures.montant_total,
+  CASE 
+    WHEN facture_details.service_type = 'Medicament' THEN medicament.nomMedicament
+    WHEN facture_details.service_type = 'Consultation' THEN typeconsultation.nomConsultation
+    ELSE 'Unknown Service'
+  END AS Type
+FROM facture_details
+INNER JOIN factures ON factures.id_facture = facture_details.facture_id
+LEFT JOIN medicament ON facture_details.service_id = medicament.id
+LEFT JOIN consultation ON facture_details.service_id = consultation.id
+LEFT JOIN typeconsultation ON typeconsultation.id_typeConsultation = consultation.id_typeConsultation
+WHERE facture_details.facture_id = ?
+
+;
+`, [id]);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des factures :', error);
