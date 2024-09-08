@@ -68,9 +68,9 @@ const getControllerPatientOne = async (req, res) => {
 const postControllerPatient = async (req, res, next) => {
 
   try {
-    const { nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img } = req.body;
+    const { nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, tel, email, societePatient, assurance, profession, typePatient, 	groupeSanguin, img } = req.body;
 
-    await patientModel.createPatient(nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, telephone, email, societePatient, assurance, profession, typePatient, groupeSanguin, img);
+    await patientModel.createPatient(nom_patient, prenom,dateNaissance,lieuNaissance, sexe, province, adresse, tel, email, societePatient, assurance, profession, typePatient, groupeSanguin, img);
     res.status(201).json({ message: 'Patient créé avec succès' });
   } catch (err) {
     next(err);
