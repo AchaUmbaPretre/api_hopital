@@ -15,6 +15,22 @@ const getControllerFactures = async (req, res, next) => {
   }
 };
 
+const getControllerFacturesService = async (req, res, next) => {
+  const {type} = req.query;
+  try {
+
+    const data = await facturesModel.getFactureService(type);
+
+    if (!data) {
+      return res.status(401).json({ success: false, message: 'Service non trouvé' });
+    }
+
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 const getControllerFacturesOne = async (req, res, next) => {
     const {id} = req.query;
@@ -34,20 +50,27 @@ const getControllerFacturesOne = async (req, res, next) => {
   
 
 
-const postControllerFactures = async (req, res, next) => {
+  const postControllerFactures = async (req, res, next) => {
+    try {
+      const { patient_id, date_emission, date_limite, montant_total, status, serviceDetails } = req.body;
 
-  try {
-    const {patient_id, date_emission, date_limite, montant_total, status} = req.body;
-
-    await facturesModel.createFactures(patient_id, date_emission, date_limite, montant_total, status);
-    res.status(201).json({ message: 'Facture créée avec succès' });
-  } catch (err) {
-    next(err);
-  }
-};
+  
+      // Créer la facture et obtenir l'ID de la facture
+      const factureId = await facturesModel.createFactures(patient_id, date_emission, date_limite, montant_total, status);
+  
+      // Insérer les détails de la facture
+      await facturesModel.insertFactureDetails(factureId, req.body.service_details);
+  
+      res.status(201).json({ message: 'Facture créée avec succès' });
+    } catch (err) {
+      next(err);
+    }
+  };
+  
 
 module.exports = {
     getControllerFactures,
+    getControllerFacturesService,
     getControllerFacturesOne,
     postControllerFactures
 };
