@@ -47,12 +47,12 @@ const getControllerTypePatient = async (req, res, next) => {
   }
 };
 
-const getControllerPatientOne = async (req, res) => {
+const getControllerPatientOne = async (req, res, next) => {
   const {id_patient} = req.query;
 
   try {
 
-    const data = await patientModel.getControllerPatientOne(id_patient);
+    const data = await patientModel.getPatientOne(id_patient);
 
     if (!data) {
       return res.status(401).json({ success: false, message: 'Utilisateur non trouvé' });

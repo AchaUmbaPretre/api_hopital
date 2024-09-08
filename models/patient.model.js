@@ -36,7 +36,9 @@ const getPatient = async () => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM patient');
+      const results = await queryAsync(`SELECT patient.*, typepatient.nom_typePatient FROM patient
+LEFT JOIN typePatient ON patient.typePatient
+GROUP BY patient.id_patient`);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des patients :', error);
@@ -80,7 +82,10 @@ const getPatientOne = async (id_patient) => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM patient WHERE id_patient = ?', [id_patient]);
+      const results = await queryAsync(`SELECT patient.*, typepatient.nom_typePatient FROM patient
+   INNER JOIN typePatient ON patient.typePatient
+    WHERE patient.id_patient = ?
+    GROUP BY patient.id_patient `, [id_patient]);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des patients :', error);
