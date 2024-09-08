@@ -14,7 +14,8 @@ const getFactures = async () => {
     };
   
     try {
-      const results = await queryAsync('SELECT * FROM factures');
+      const results = await queryAsync(`SELECT factures.*, patient.nom_patient FROM factures
+INNER JOIN patient ON factures.patient_id = patient.id_patient`);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des factures :', error);
@@ -76,21 +77,24 @@ const getFactureService = async (type) => {
   };
 
   const createFactures = async (patient_id, date_emission, date_limite, montant_total, status) => {
-    try {
-      // Insérer la facture
-      const result = await pool.query(
+    return new Promise((resolve, reject) => {
+      pool.query(
         'INSERT INTO Factures (patient_id, date_emission, date_limite, montant_total, status) VALUES (?, ?, ?, ?, ?)',
-        [patient_id, date_emission, date_limite, montant_total, status]
+        [patient_id, date_emission, date_limite, montant_total, status],
+        (error, results) => {
+          if (error) {
+            console.error('Erreur lors de la création de la facture:', error);
+            return reject(error);
+          }
+          
+          // Assurez-vous que result.insertId est disponible
+          const factureId = results.insertId;
+          console.log('factureId:', factureId);
+          
+          resolve(factureId);
+        }
       );
-  
-      // Obtenir l'ID de la facture insérée
-      const factureId = result.insertId;
-  
-      return factureId;
-    } catch (error) {
-      console.error('Erreur lors de la création de la facture:', error);
-      throw error;
-    }
+    });
   };
   const insertFactureDetails = async (factureId, serviceDetails) => {
     try {
