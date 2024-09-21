@@ -14,8 +14,9 @@ const getOrdonnace = async () => {
     };
   
     try {
-      const results = await queryAsync(`SELECT ordonnance.quantite,ordonnance.dateOrdre, medicament.nomMedicament, consultation.id, typeconsultation.nomConsultation FROM ordonnance
+      const results = await queryAsync(`SELECT ordonnance.quantite,ordonnance.dateOrdre, medicament.nomMedicament, medicament.montant AS prix, consultation.id, typeconsultation.nomConsultation, patient.nom_patient FROM ordonnance
                                           INNER JOIN consultation ON ordonnance.consultationId = consultation.id
+                                          INNER JOIN patient ON consultation.patientId = patient.id_patient
                                           INNER JOIN typeconsultation ON consultation.id_typeConsultation = typeconsultation.id_typeConsultation
                                           INNER JOIN medicament ON ordonnance.medicamentId = medicament.id
                                           GROUP BY consultation.id`);

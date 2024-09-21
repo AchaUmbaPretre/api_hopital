@@ -36,9 +36,9 @@ const getPatient = async () => {
     };
   
     try {
-      const results = await queryAsync(`SELECT patient.*, typepatient.nom_typePatient FROM patient
-LEFT JOIN typePatient ON patient.typePatient
-GROUP BY patient.id_patient`);
+      const results = await queryAsync(`SELECT id_patient, patient.nom_patient, patient.prenom, patient.dateNaissance, patient.lieuNaissance, patient.sexe, patient.province, patient.adresse, patient.tel, patient.email, typepatient.nom_typePatient FROM patient
+                                          LEFT JOIN typePatient ON patient.typePatient = typepatient.id_typePatient
+                                          GROUP BY patient.id_patient`);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des patients :', error);

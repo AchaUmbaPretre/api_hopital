@@ -15,6 +15,7 @@ const traitementRoutes = require('./routes/traitement.routes');
 const userRoutes = require('./routes/user.routes');
 const paiementRoutes = require('./routes/paiement.routes');
 const ordonnanceRoutes = require('./routes/ordonnance.routes');
+const laboRoutes = require('./routes/labo.routes');
 
 
 const errorHandler = require('./middleware/error.middleware');
@@ -36,6 +37,7 @@ app.use('/api/traitement', traitementRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/paiement', paiementRoutes);
 app.use('/api/ordonnance', ordonnanceRoutes);
+app.use('/api/labo', laboRoutes);
 
 app.use(errorHandler);
 

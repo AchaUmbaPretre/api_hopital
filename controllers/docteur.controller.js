@@ -89,13 +89,12 @@ const getControllerDepartement = async (req, res, next) => {
 };
 
 const postControllerDocteur = async (req, res, next) => {
-  console.log(req.body)
 
   try {
     const { username, password, email, postnom, prenom, phone_number, role, department_id, specialite, adresse, img } = req.body;
 
     // Définir le mot de passe par défaut si aucun mot de passe n'est fourni
-    const plainPassword = password || '1234';
+    const plainPassword = password || '123456';
     const docteurRole = role || 1
 
     // Hacher le mot de passe

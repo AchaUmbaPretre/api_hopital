@@ -1,5 +1,19 @@
 const userModel = require('../models/user.model');
 
+const getControllerUserAll = async (req, res, next) => {
+  try {
+
+    const data = await userModel.getUserAll();
+
+    if (!data) {
+      return res.status(401).json({ success: false, message: 'USER non trouvé' });
+    }
+
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
 const getControllerUser = async (req, res, next) => {
   try {
 
@@ -35,4 +49,5 @@ const getControllerUserOne = async (req, res, next) => {
 module.exports = {
   getControllerUser,
   getControllerUserOne,
+  getControllerUserAll
 };

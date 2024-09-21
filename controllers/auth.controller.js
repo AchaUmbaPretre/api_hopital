@@ -57,7 +57,17 @@ const register = async (req, res, next) => {
   }
 };
 
+const logout = async(req, res) => {
+  res.clearCookie('access_token', {
+    sameSite: 'None',
+    secure: true,
+  });
+
+  res.status(200).json({ message: 'Utilisateur déconnecté avec succès' });
+}
+
 module.exports = {
   login,
   register,
+  logout
 };

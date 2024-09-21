@@ -82,7 +82,25 @@ const getFactureService = async (type) => {
       } else if (type === 'Médicament') {
         results = await queryAsync(`SELECT id, medicament.nomMedicament AS nom_medicament, montant FROM Medicament`);
       } else if (type === 'Hospitalisation') {
-        results = await queryAsync(`SELECT id, date_admission FROM admission`);
+        results = await queryAsync(`SELECT id FROM admission`);
+      }
+      else if(type === 'Ordonnance'){
+        results = await queryAsync(`SELECT 
+      ordonnance.quantite,
+      ordonnance.dateOrdre,
+      medicament.nomMedicament,
+      medicament.montant AS prix,
+      (ordonnance.quantite * medicament.montant) AS montant, -- Calcul du prix total
+      ordonnance.id,
+      typeconsultation.nomConsultation,
+      patient.nom_patient
+  FROM ordonnance
+  INNER JOIN consultation ON ordonnance.consultationId = consultation.id
+  INNER JOIN patient ON consultation.patientId = patient.id_patient
+  INNER JOIN typeconsultation ON consultation.id_typeConsultation = typeconsultation.id_typeConsultation
+  INNER JOIN medicament ON ordonnance.medicamentId = medicament.id
+  GROUP BY ordonnance.quantite, ordonnance.dateOrdre, medicament.nomMedicament, medicament.montant, consultation.id, typeconsultation.nomConsultation, patient.nom_patient;
+`);
       }
       return results; 
     } catch (error) {
