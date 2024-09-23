@@ -55,7 +55,6 @@ const getUserByUsername = async (email) => {
       WHERE users.email = ?`,
       [email]
     );
-    console.log('Résultat de la requête SQL:', results);
     return results[0]; 
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'utilisateur :', error);

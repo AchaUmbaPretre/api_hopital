@@ -45,7 +45,7 @@ const getControllerConsultOne = async (req, res, next) => {
   }
 };
 
-const getControllerConsultType = async (req, res) => {
+const getControllerConsultType = async (req, res,next) => {
   try {
 
     const data = await consultModel.getConsultType();

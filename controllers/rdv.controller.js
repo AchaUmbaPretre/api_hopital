@@ -48,6 +48,21 @@ const getControllerRdvDocteurOne = async (req, res, next) => {
     }
   };
 
+const getControllerRdvDocteurOneConfirmation = async (req, res, next) => {
+    const {id} = req.query;
+    try {
+  
+      const data = await rdvModel.getRdvOneNotification(id);
+  
+      if (!data) {
+        return res.status(401).json({ success: false, message: 'Service non trouvé' });
+      }
+  
+      res.json(data);
+    } catch (err) {
+      next(err);
+    }
+  };
 
 const postControllerRdv = async (req, res, next) => {
 
@@ -61,9 +76,24 @@ const postControllerRdv = async (req, res, next) => {
   }
 };
 
+const putControllerRdvConfirmation = async(req, res) => {
+  const {id} = req.query;
+  console.log(id)
+  try {
+    
+    await rdvModel.putRdvConfirmation(id)
+    res.status(201).json({ message: 'Confirmation mise à jour avec succès' });
+
+  } catch (error) {
+    
+  }
+}
+
 module.exports = {
   getControllerRdv,
   getControllerRdvOne,
   postControllerRdv,
-  getControllerRdvDocteurOne
+  getControllerRdvDocteurOne,
+  putControllerRdvConfirmation,
+  getControllerRdvDocteurOneConfirmation 
 };
