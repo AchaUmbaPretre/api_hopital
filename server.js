@@ -17,6 +17,7 @@ const paiementRoutes = require('./routes/paiement.routes');
 const ordonnanceRoutes = require('./routes/ordonnance.routes');
 const laboRoutes = require('./routes/labo.routes');
 const triageRoutes = require('./routes/triage.routes');
+const mutuelleRoutes = require('./routes/mutuelle.routes');
 const { idempotence } = require('./middleware/idempotence.middleware');
 
 
@@ -40,6 +41,7 @@ const routersMutation = [
   ['/api/ordonnance', ordonnanceRoutes],
   ['/api/pharma', pharmaRoutes],
   ['/api/triage', triageRoutes],
+  ['/api/mutuelle', mutuelleRoutes],
 ];
 
 app.use('/api/auth', authRoutes);

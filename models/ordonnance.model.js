@@ -14,17 +14,45 @@ const queryAsync = (query, params) => {
   });
 };
 
+/**
+ * File d'attente pharmacie — UNE LIGNE PAR MÉDICAMENT (B3 RDC, phase 5).
+ *
+ * ⚠️ Correction de la requête héritée : le GROUP BY consultation.id
+ * faisait s'effondrer toutes les lignes d'une même ordonnance en UNE
+ * ligne (quantités/médicaments arbitraires) — la pharmacie ne voyait
+ * qu'un médicament sur N. La requête :
+ *   - renvoie chaque ligne d'ordonnance (id_ordonnance) avec l'id du
+ *     médicament (medicament_id) et du patient (id_patient) — ids
+ *     exploitables directement par le frontend pour la délivrance ;
+ *   - garde les colonnes héritées (quantite, dateOrdre,
+ *     nomMedicament, prix, id, nomConsultation, nom_patient) pour la
+ *     rétrocompatibilité des écrans existants ;
+ *   - les plus récentes d'abord, plafonnées à 200 (file du jour).
+ */
 const getOrdonnace = async () => {
   try {
-    const results = await queryAsync(`SELECT ordonnance.quantite,ordonnance.dateOrdre, medicament.nomMedicament, medicament.montant AS prix, consultation.id, typeconsultation.nomConsultation, patient.nom_patient FROM ordonnance
+    const results = await queryAsync(`SELECT ordonnance.id_ordonnance,
+                                               ordonnance.quantite,
+                                               ordonnance.dateOrdre,
+                                               medicament.id AS medicament_id,
+                                               medicament.nomMedicament,
+                                               medicament.montant AS prix,
+                                               consultation.id,
+                                               typeconsultation.nomConsultation,
+                                               patient.id_patient,
+                                               patient.nom_patient,
+                                               patient.prenom,
+                                               patient.telephone
+                                        FROM ordonnance
                                         INNER JOIN consultation ON ordonnance.consultationId = consultation.id
                                         INNER JOIN patient ON consultation.patientId = patient.id_patient
                                         INNER JOIN typeconsultation ON consultation.id_typeConsultation = typeconsultation.id_typeConsultation
                                         INNER JOIN medicament ON ordonnance.medicamentId = medicament.id
-                                        GROUP BY consultation.id`);
+                                        ORDER BY ordonnance.dateOrdre DESC, ordonnance.id_ordonnance DESC
+                                        LIMIT 200`);
     return results;
   } catch (error) {
-    console.error('Erreur lors de la récupération des consultation :', error);
+    console.error('Erreur lors de la récupération des ordonnances :', error);
     throw error;
   }
 };

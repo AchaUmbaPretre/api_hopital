@@ -88,6 +88,18 @@ async function tableTriageDisponible() {
   return colonnes.has('id_triage');
 }
 
+/** Tables `mutuelle` + `patient_mutuelle` (CRUD mutuelles B3). */
+async function tableMutuelleDisponible() {
+  const colonnes = await colonnesDe('mutuelle');
+  return colonnes.has('id_mutuelle');
+}
+
+/** Table `vente_pharma` (carnet de ventes directes B3) existe-t-elle ? */
+async function tableVenteDisponible() {
+  const colonnes = await colonnesDe('vente_pharma');
+  return colonnes.has('id_vente');
+}
+
 /** Table d'idempotence disponible (middleware de dédupe). */
 async function tableIdempotenceDisponible() {
   const colonnes = await colonnesDe('idempotence_cles');
@@ -102,5 +114,7 @@ module.exports = {
   dossierPatientDisponible,
   colonnesMedicamentRdc,
   tableTriageDisponible,
+  tableMutuelleDisponible,
+  tableVenteDisponible,
   tableIdempotenceDisponible,
 };

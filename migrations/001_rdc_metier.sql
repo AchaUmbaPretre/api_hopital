@@ -137,3 +137,23 @@ CREATE TABLE IF NOT EXISTS idempotence_cles (
 -- Purge des clés de plus de 48 h (sûr à relancer ; le middleware purge
 -- aussi à l'insertion, ceci est le filet de la migration).
 DELETE FROM idempotence_cles WHERE cree_le < (NOW() - INTERVAL 48 HOUR);
+
+-- ---------------------------------------------------------------------------
+-- 8. vente_pharma (B3 RDC, phase 5) — carnet de ventes directes de la
+--    pharmacie : ventes au comptoir SANS dossier patient (le carnet
+--    remplace la facture, pratique réelle des HGR). Les ventes liées à
+--    un patient passent par le flux factures/paiements normal.
+--    lignes_json = [{medicament_id, nom, quantite, prix_usd}] — le
+--    détail structuré est conservé pour l'audit et les statistiques.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS vente_pharma (
+  id_vente INT AUTO_INCREMENT PRIMARY KEY,
+  reference_locale VARCHAR(40) NOT NULL,          -- VTE-ANNÉE-N° (frontend)
+  client_nom VARCHAR(150) NULL,                   -- client anonyme accepté
+  lignes_json TEXT NOT NULL,
+  montant_total_usd DECIMAL(12,2) NOT NULL DEFAULT 0,
+  taux_fc_usd DECIMAL(12,2) NULL,                 -- audit bidevise
+  date_vente DATETIME NOT NULL,
+  INDEX idx_vente_date (date_vente),
+  INDEX idx_vente_ref (reference_locale)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
