@@ -103,10 +103,25 @@ const createPatient = async (nom_patient, prenom, dateNaissance, lieuNaissance, 
   }
 };
 
+/**
+ * Référence carnet RDC (« INIT-ANNÉE-N° ») — UPDATE non bloquant
+ * appelé UNIQUEMENT quand la colonne `dossier` existe (migration 001).
+ */
+const majDossier = async (idPatient, dossier) => {
+  try {
+    const results = await queryAsync('UPDATE patient SET dossier = ? WHERE id_patient = ?', [dossier, idPatient]);
+    return results;
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du dossier :', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getPatientCount,
   getPatient,
   getTypePatient,
   createPatient,
   getPatientOne,
+  majDossier,
 };

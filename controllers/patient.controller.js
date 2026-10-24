@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const patientModel = require('../models/patient.model');
+const { dossierPatientDisponible } = require('../utils/rdcColumns');
 
 const getControllerPatientCount = async (req, res, next) => {
   try {
@@ -78,6 +79,17 @@ const postControllerPatient = async (req, res, next) => {
       message: 'Patient créé avec succès',
       id_patient: resultat ? resultat.insertId : undefined,
     });
+
+    // Référence carnet RDC (« INIT-ANNÉE-N° », générée par le
+    // frontend) : persistée SEULEMENT si la colonne `dossier` existe
+    // (migration 001_rdc_metier.sql) — jamais bloquante.
+    try {
+      if (req.body.dossier !== undefined && (await dossierPatientDisponible()) && resultat && resultat.insertId) {
+        await patientModel.majDossier(resultat.insertId, req.body.dossier);
+      }
+    } catch (errDossier) {
+      console.error('[patient] dossier RDC non persisté (non bloquant) :', errDossier.message);
+    }
   } catch (err) {
     next(err);
   }

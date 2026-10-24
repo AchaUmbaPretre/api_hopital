@@ -159,10 +159,28 @@ const getFactureService = async (type) => {
     
   
   
+  /**
+   * Mise à jour des extras RDC d'une facture (audit bidevise /
+   * exonération / urgence vitale / référence locale). Appelée UNIQUEMENT
+   * par le contrôleur quand la migration 001 a ajouté les colonnes.
+   * @param {string[]} champs — fragments « colonne = ? » déjà validés.
+   * @param {unknown[]} valeurs — valeurs + id_facture en dernier.
+   */
+  const majExtrasRdc = async (champs, valeurs) => {
+    return new Promise((resolve, reject) => {
+      pool.query(
+        `UPDATE factures SET ${champs.join(', ')} WHERE id_facture = ?`,
+        valeurs,
+        (error, results) => (error ? reject(error) : resolve(results)),
+      );
+    });
+  };
+
   module.exports = {
     getFactureService,
     getFactures,
     getFacturesOne,
     createFactures,
-    insertFactureDetails
+    insertFactureDetails,
+    majExtrasRdc
   };

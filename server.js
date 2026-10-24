@@ -16,6 +16,8 @@ const userRoutes = require('./routes/user.routes');
 const paiementRoutes = require('./routes/paiement.routes');
 const ordonnanceRoutes = require('./routes/ordonnance.routes');
 const laboRoutes = require('./routes/labo.routes');
+const triageRoutes = require('./routes/triage.routes');
+const { idempotence } = require('./middleware/idempotence.middleware');
 
 
 const errorHandler = require('./middleware/error.middleware');
@@ -24,20 +26,32 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+// Idempotence (B2 RDC) : dédupe des rejeux offline par X-Idempotence-Key
+// (réponse stockée rejouée telle quelle — zéro doublon après coupure).
+// Le middleware passe à travers silencieusement si la migration
+// 001_rdc_metier.sql n'a pas encore créé la table idempotence_cles.
+// Monté UNIQUEMENT sur les routers d'écriture du flux RDC.
+const routersMutation = [
+  ['/api/patient', patientRoutes],
+  ['/api/consultant', consultantRoutes],
+  ['/api/factures', factureRoutes],
+  ['/api/traitement', traitementRoutes],
+  ['/api/paiement', paiementRoutes],
+  ['/api/ordonnance', ordonnanceRoutes],
+  ['/api/pharma', pharmaRoutes],
+  ['/api/triage', triageRoutes],
+];
+
 app.use('/api/auth', authRoutes);
-app.use('/api/patient', patientRoutes);
 app.use('/api/docteur', docteurRoutes);
-app.use('/api/consultant', consultantRoutes);
 app.use('/api/service', serviceRoutes);
-app.use('/api/pharma', pharmaRoutes);
 app.use('/api/rendezVous', rdvRoutes);
 app.use('/api/admission', admissionRoutes);
-app.use('/api/factures', factureRoutes);
-app.use('/api/traitement', traitementRoutes);
 app.use('/api/user', userRoutes);
-app.use('/api/paiement', paiementRoutes);
-app.use('/api/ordonnance', ordonnanceRoutes);
 app.use('/api/labo', laboRoutes);
+for (const [chemin, router] of routersMutation) {
+  app.use(chemin, idempotence, router);
+}
 
 app.use(errorHandler);
 

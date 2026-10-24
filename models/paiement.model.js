@@ -34,13 +34,25 @@ const getPaiementOne = async (id) => {
   }
 };
 
-/** Création d'un paiement — renvoie insertId (trace croisée avec le
- *  reçu imprimé côté caisse RDC). */
-const createPaiement = async (id_facture, amount, date_paiement, methode_paiement, transaction_id) => {
+/**
+ * Création d'un paiement — renvoie insertId (trace croisée avec le
+ * reçu imprimé côté caisse RDC). `tauxFcUsd` (audit bidevise) est
+ * persisté SEULEMENT si fourni (le contrôleur ne le passe que lorsque
+ * la colonne `taux_fc_usd` existe — migration 001_rdc_metier.sql).
+ */
+const createPaiement = async (id_facture, amount, date_paiement, methode_paiement, transaction_id, tauxFcUsd) => {
+  const avecTaux = tauxFcUsd !== undefined && tauxFcUsd !== null;
+  const colonnes = ['id_facture', 'amount', 'date_paiement', 'methode_paiement', 'transaction_id'];
+  const valeurs = [id_facture, amount, date_paiement, methode_paiement, transaction_id];
+  if (avecTaux) {
+    colonnes.push('taux_fc_usd');
+    valeurs.push(tauxFcUsd);
+  }
+  const placeholders = colonnes.map(() => '?').join(', ');
   try {
     const result = await queryAsync(
-      'INSERT INTO paiements (id_facture, amount, date_paiement, methode_paiement, transaction_id) VALUES (?, ?, ?, ?, ?)',
-      [id_facture, amount, date_paiement, methode_paiement, transaction_id],
+      `INSERT INTO paiements (${colonnes.join(', ')}) VALUES (${placeholders})`,
+      valeurs,
     );
     return result;
   } catch (error) {
