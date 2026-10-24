@@ -61,7 +61,10 @@ const getControllerFacturesOne = async (req, res, next) => {
       // Insérer les détails de la facture
       await facturesModel.insertFactureDetails(factureId, req.body.service_details);
   
-      res.status(201).json({ message: 'Facture créée avec succès' });
+      // id_facture renvoyé : le frontend offline-first RDC peut lier
+      // immédiatement les paiements/acomptes à la facture réelle, sans
+      // réconciliation par correspondance (patient + montant + date).
+      res.status(201).json({ message: 'Facture créée avec succès', id_facture: factureId });
     } catch (err) {
       next(err);
     }

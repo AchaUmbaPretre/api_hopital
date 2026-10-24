@@ -41,8 +41,11 @@ const postControllerPaiement = async (req, res, next) => {
   try {
     const { id_facture, amount, date_paiement, methode_paiement, transaction_id} = req.body;
 
-    await paiementModel.createPaiement(id_facture, amount, date_paiement, methode_paiement, transaction_id);
-    res.status(201).json({ message: 'Paiement créé avec succès' });
+    const resultat = await paiementModel.createPaiement(id_facture, amount, date_paiement, methode_paiement, transaction_id);
+    res.status(201).json({
+      message: 'Paiement créé avec succès',
+      id_paiement: resultat ? resultat.insertId : undefined,
+    });
   } catch (err) {
     next(err);
   }

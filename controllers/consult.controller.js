@@ -65,8 +65,14 @@ const postControllerConsult = async (req, res, next) => {
   try {
     const { patientId , personnelId, id_typeConsultation, dateConsultation, diagnostic, notes } = req.body;
 
-    await consultModel.createConsult(patientId , personnelId, id_typeConsultation, dateConsultation, diagnostic, notes);
-    res.status(201).json({ message: 'consultation créée avec succès' });
+    const resultat = await consultModel.createConsult(patientId , personnelId, id_typeConsultation, dateConsultation, diagnostic, notes);
+    // id_consultation renvoyé : le frontend RDC enchaîne immédiatement
+    // les lignes d'ordonnance sur la consultation réelle (POST
+    // /api/ordonnance attend consultationId), sans réconciliation.
+    res.status(201).json({
+      message: 'consultation créée avec succès',
+      id_consultation: resultat ? resultat.insertId : undefined,
+    });
   } catch (err) {
     next(err);
   }

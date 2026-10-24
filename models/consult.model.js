@@ -1,24 +1,26 @@
 const pool = require('../config/db.config');
 
-const getConsulCount = async () => {
-  const queryAsync = (query, params) => {
-    return new Promise((resolve, reject) => {
-      pool.query(query, params, (error, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(results);
-        }
-      });
+/** Requête en promesse — style callback obligatoire pour lire les
+ *  résultats et les insertId du package `mysql`. */
+const queryAsync = (query, params) => {
+  return new Promise((resolve, reject) => {
+    pool.query(query, params, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
     });
-  };
+  });
+};
 
+const getConsulCount = async () => {
   try {
     const results = await queryAsync('SELECT COUNT(id) AS nbre_consultation FROM consultation');
-    return results; 
+    return results;
   } catch (error) {
     console.error('Erreur lors de la récupération des consultation :', error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -68,8 +70,7 @@ const getConsult = async () => {
           INNER JOIN patient ON consultation.patientId = patient.id_patient
           INNER JOIN users AS docteur ON consultation.personnelId = docteur.id
           INNER JOIN typeconsultation AS tc ON consultation.id_typeConsultation = tc.id_typeConsultation
-          WHERE consultation.id = ${id_consultation}`
-);
+          WHERE consultation.id = ?`, [id_consultation]);
       return results; 
     } catch (error) {
       console.error('Erreur lors de la récupération des consultation :', error);
@@ -99,14 +100,17 @@ const getConsultType = async () => {
     }
   };
   
-  const createConsult = async (patientId , 	personnelId, id_typeConsultation, dateConsultation, diagnostic, notes) => {
-  
-    const result = await pool.query(
-        'INSERT INTO consultation (patientId , 	personnelId, id_typeConsultation, dateConsultation, diagnostic, notes) VALUES (?, ?, ?, ?, ?, ?)',
-        [patientId , 	personnelId, id_typeConsultation, dateConsultation, diagnostic, notes]
+  const createConsult = async (patientId ,      personnelId, id_typeConsultation, dateConsultation, diagnostic, notes) => {
+    try {
+      const result = await queryAsync(
+        'INSERT INTO consultation (patientId ,  personnelId, id_typeConsultation, dateConsultation, diagnostic, notes) VALUES (?, ?, ?, ?, ?, ?)',
+        [patientId ,    personnelId, id_typeConsultation, dateConsultation, diagnostic, notes]
       );
-  
-    return result;
+      return result;
+    } catch (error) {
+      console.error('Erreur lors de la création de la consultation :', error);
+      throw error;
+    }
   };
   
   

@@ -36,8 +36,11 @@ const postControllerOrdonnance = async (req, res, next) => {
   try {
     const { consultationId, medicamentId, quantite, dateOrdre } = req.body;
 
-    await ordonnanceModel.createOrdonnance(consultationId, medicamentId, quantite, dateOrdre);
-    res.status(201).json({ message: 'Ordonnance créée avec succès' });
+    const resultat = await ordonnanceModel.createOrdonnance(consultationId, medicamentId, quantite, dateOrdre);
+    res.status(201).json({
+      message: 'Ordonnance créée avec succès',
+      id_ordonnance: resultat ? resultat.insertId : undefined,
+    });
   } catch (err) {
     next(err);
   }

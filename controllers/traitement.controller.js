@@ -39,8 +39,11 @@ const postControllerTraitement = async (req, res, next) => {
   try {
     const {consultationId, medicament, dose, frequence, duree, instructions} = req.body;
 
-    await traitementModel.createTraitement(consultationId, medicament, dose, frequence, duree, instructions);
-    res.status(201).json({ message: 'Traitement créé avec succès' });
+    const resultat = await traitementModel.createTraitement(consultationId, medicament, dose, frequence, duree, instructions);
+    res.status(201).json({
+      message: 'Traitement créé avec succès',
+      id_traitement: resultat ? resultat.insertId : undefined,
+    });
   } catch (err) {
     next(err);
   }
